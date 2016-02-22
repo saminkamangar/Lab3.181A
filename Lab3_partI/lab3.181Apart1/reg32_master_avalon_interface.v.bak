@@ -1,0 +1,115 @@
+
+module reg32_master_avalon_interface(
+
+
+
+input clk,
+input reset_n,
+
+output reg write,   //telling the salve to write or read
+
+output reg [31:0] writedata, //writedata is output(outputing to the slave)
+
+output reg read,
+
+input  [31:0] readdata, //input or output
+
+output reg [3:0] byteenable,
+output reg chipselect,
+
+
+
+output reg [31:0] reg32 = 32'h18 ///address(getting an error saying it has no driver)
+
+);
+
+
+
+reg [25:0] counter;
+reg [1:0] state=0;
+reg [31:0] storage;
+
+always @(posedge clk ) //ask about putting back the reset
+
+begin
+		
+	if(!reset_n)
+		begin 
+		//blocking or non-blocking?!
+			write=1'b0;
+			writedata= 32'h0000;
+			read=1'b0;
+			
+			byteenable=4'b000;
+			chipselect=1'b0;
+			counter=26'b0;
+			state=2'b0;
+			
+		end
+		
+		if (counter > 26'd50000000)
+		begin //counter to execute the block once per second
+		
+		case(state)
+		
+		 0: 
+		 begin
+			read=1;
+			chipselect=1;
+			
+			state=state+1;
+		 end
+		 
+		 1: 
+		 begin
+		
+					storage=readdata;
+					
+					read=0;
+					
+					state=state+1; 
+		 end
+		 2:
+		 begin
+		 
+		 if(storage!=32'b0)
+		 begin
+			storage=storage+1;
+			writedata=storage;
+			write=1;		 
+			//else it will go to the third cycle
+		 end
+			state=state+1;
+
+		end
+		 
+		3:	
+		begin
+			write=0;
+			chipselect=0;
+			counter=0;
+			state=0;
+		end
+		endcase
+	end	
+		
+		
+		counter = counter + 1;
+
+
+
+	end
+
+
+	
+endmodule
+
+
+
+
+
+
+
+
+
+

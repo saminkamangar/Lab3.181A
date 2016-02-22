@@ -1,0 +1,80 @@
+# Loading project lab3
+# reading /apps/Altera/15.0/modelsim_ae/linuxaloem/../modelsim.ini
+# Loading project lab3Modelsim
+# Compile of sdram_master.v failed with 1 errors.
+# Compile of sdram_master.v was successful.
+vsim work.sdram_master
+# vsim 
+# Start time: 14:21:35 on Feb 10,2016
+# //  ModelSim ALTERA 10.3d Oct  7 2014 Linux 2.6.32-573.12.1.el6.x86_64
+# //
+# //  Copyright 1991-2014 Mentor Graphics Corporation
+# //  All Rights Reserved.
+# //
+# //  THIS WORK CONTAINS TRADE SECRET AND PROPRIETARY INFORMATION
+# //  WHICH IS THE PROPERTY OF MENTOR GRAPHICS CORPORATION OR ITS
+# //  LICENSORS AND IS SUBJECT TO LICENSE TERMS.
+# //
+# Loading work.sdram_master
+add wave -position insertpoint  \
+sim:/sdram_master/clk \
+sim:/sdram_master/read_n \
+sim:/sdram_master/write_n \
+sim:/sdram_master/chipselect \
+sim:/sdram_master/waitrequest \
+sim:/sdram_master/address \
+sim:/sdram_master/byteenable \
+sim:/sdram_master/readdatavalid \
+sim:/sdram_master/readdata \
+sim:/sdram_master/writedata \
+sim:/sdram_master/reset_n \
+sim:/sdram_master/state_ex \
+sim:/sdram_master/max \
+sim:/sdram_master/min \
+sim:/sdram_master/counter \
+sim:/sdram_master/state \
+sim:/sdram_master/nextstate
+force -freeze sim:/sdram_master/clk 1 0, 0 {50 ps} -r 100
+force -freeze sim:/sdram_master/reset_n 0 0
+run
+force -freeze sim:/sdram_master/reset_n 1 0
+force -freeze sim:/sdram_master/waitrequest 0 0
+force -freeze sim:/sdram_master/readdata 011 0
+run
+force -freeze sim:/sdram_master/readdatavalid 1 0
+force -freeze sim:/sdram_master/readdata 11111111 0
+run
+run
+force -freeze sim:/sdram_master/readdata 111 0
+run
+force -freeze sim:/sdram_master/readdata 000 0
+run
+force -freeze sim:/sdram_master/readdata 110 0
+run
+force -freeze sim:/sdram_master/readdata 1111 0
+run
+force -freeze sim:/sdram_master/readdata 1000 0
+run
+force -freeze sim:/sdram_master/readdata 1111 0
+run
+force -freeze sim:/sdram_master/read_n 1 0
+force -freeze sim:/sdram_master/write_n 0 0
+run
+run
+force -freeze sim:/sdram_master/readdata 111111 0
+run
+force -freeze sim:/sdram_master/readdata 111111 0
+run
+force -freeze sim:/sdram_master/readdata 1000 0
+run
+run
+run
+run
+run
+run
+force -freeze sim:/sdram_master/readdata 111111 0
+run
+force -freeze sim:/sdram_master/readdata 1 0
+run
+# End time: 15:58:51 on Feb 10,2016, Elapsed time: 1:37:16
+# Errors: 0, Warnings: 0

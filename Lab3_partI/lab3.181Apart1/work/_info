@@ -1,0 +1,30 @@
+m255
+K4
+z2
+13
+!s112 1.1
+!i10d 8192
+!i10e 25
+!i10f 100
+cModel Technology
+dC:/altera/15.0
+vreg32_master_avalon_interface
+!s110 1454118761
+!i10b 1
+!s100 Ujnid<@SVloYUgajml7DG3
+IX__PKgzaLX>Mdl`YG6NQ31
+V`JN@9S9cnhjKRR_L]QIcM3
+dC:/Users/Samin/Desktop/lab3.181Apart1
+w1454118729
+8C:/Users/Samin/Desktop/lab3.181Apart1/reg32_master_avalon_interface.v
+FC:/Users/Samin/Desktop/lab3.181Apart1/reg32_master_avalon_interface.v
+L0 2
+OV;L;10.3d;59
+r1
+!s85 0
+31
+!s108 1454118761.101000
+!s107 C:/Users/Samin/Desktop/lab3.181Apart1/reg32_master_avalon_interface.v|
+!s90 -reportprogress|300|-work|work|-stats=none|C:/Users/Samin/Desktop/lab3.181Apart1/reg32_master_avalon_interface.v|
+!i113 1
+o-work work

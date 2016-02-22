@@ -1,0 +1,160 @@
+module sdram_master (
+	input clk,
+	output reg read_n =1 ,
+	output reg write_n  = 1,
+	output chipselect,
+	input waitrequest,
+	output reg [31:0] address = 0,
+	output [1:0] byteenable,
+	input readdatavalid,
+	input [15:0] readdata,
+	output reg [15:0] writedata,
+	input reset_n
+	
+//	output [31:0] state_ex
+//	output reg [31:0] reg32 = 32'hFF200018,
+//	output reg [31:0] SDRAM_BASE = 32'hC0000000
+);
+
+reg [15:0] max;
+reg [15:0] min;
+reg [4:0] counter;
+reg [2:0] state = S0;
+reg [2:0] nextstate;
+
+//reg [31:0] reg32 = 32'hFF200018;//
+parameter SDRAM_BASE = 32'hC0000000;//
+
+assign byteenable = 2'b11;
+assign chipselect = 1;
+//assign state_ex = {max, min};
+
+parameter S0 = 3'b0, S1 = 3'b1, S2 = 3'b10, S3 = 3'b11, S4 = 3'b100, S5 = 3'b101;
+
+//display_hex({1'b0,state});
+
+always @ (*) // combinational block
+begin
+	nextstate = state;
+	if (!waitrequest)
+	begin
+		//nextstate = S0;
+		case (state)
+		S0:
+		begin
+			if (readdatavalid && readdata == 16'hFF)
+				nextstate = S2; // S1
+		end
+/*
+		S1:
+		begin
+			nextstate = S2;
+		end
+*/
+		S2:
+		begin
+			if (counter == 'd20)
+				nextstate = S3;	
+		end
+		S3:
+		begin
+			nextstate = S4;	
+		end
+		S4:
+		begin
+			nextstate = S5;	
+		end
+		S5:
+		begin
+			nextstate = S0;	
+		end
+		endcase
+	end
+end
+
+always @ (posedge clk) // sequential block
+begin
+	if (!reset_n)
+		state <= S0;
+	else
+		state <= nextstate;
+end
+
+always @ (posedge clk)
+begin
+	if (state == S0 | state == S5)
+	begin
+		address <= SDRAM_BASE + 'd20;
+	end
+	else
+	begin
+		if (!waitrequest)
+		begin
+			address <= SDRAM_BASE + counter + 2;
+			counter <= counter + 2;
+		end
+		else	
+		begin
+			address <= SDRAM_BASE + counter;
+			counter <= counter;
+		end
+	end
+end
+
+
+always @ (posedge clk)
+begin
+	if (readdatavalid && state != S0)
+	begin
+		max <= (readdata > max) ? readdata: max;
+		min <= (readdata < min) ? readdata: min;
+	end
+end
+
+always @ (*) // output logic
+begin
+
+	read_n = 1;
+	write_n = 1;
+	writedata = 16'b0;
+
+	case (state)
+		S0: // idle state
+		begin
+			read_n = 0;
+			max = 16'h0;
+			min = 16'hFFFF;
+			counter = 5'b0;			
+		end
+/*
+		S1: 
+		begin
+			read_n = 0;
+		end
+*/
+		S2:
+		begin				
+			read_n = 0;
+		end
+		
+		S3:
+		begin
+			write_n = 0;
+			writedata = max;
+		end
+		
+		S4:
+		begin
+			write_n = 0;
+			writedata = min;
+		end
+		S5:
+		begin
+			write_n = 0;
+			writedata = 16'hF0F;
+		end
+	endcase 
+end
+
+
+endmodule
